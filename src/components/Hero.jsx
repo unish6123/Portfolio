@@ -2,29 +2,36 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stars } from '@react-three/drei'
 import { motion } from 'framer-motion'
 import TorusKnotScene from '../three/TorusKnot'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function Hero() {
+  const isMobile = useIsMobile(640)
+
   return (
     <section id="hero" style={{
-      position: 'relative', height: '100vh',
+      position: 'relative', minHeight: '100vh',
       display: 'flex', alignItems: 'center',
       overflow: 'hidden'
     }}>
 
       {/* 3D Canvas */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, touchAction: 'pan-y' }}>
         <Canvas camera={{ position: [0, 0, 6], fov: 60 }}>
           <ambientLight intensity={0.5} color="#0a1520" />
           <directionalLight position={[5, 5, 5]} intensity={1.2} color="#6ee7f7" />
           <directionalLight position={[-5, -3, 3]} intensity={0.8} color="#a78bfa" />
           <Stars radius={80} depth={50} count={3000} factor={3} fade speed={1} />
           <TorusKnotScene />
-          <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} />
+          <OrbitControls enableZoom={false} enablePan={false} enableRotate={!isMobile} autoRotate={false} />
         </Canvas>
       </div>
 
       {/* Hero Text */}
-      <div style={{ position: 'relative', zIndex: 10, padding: '0 64px', maxWidth: 620 }}>
+      <div style={{
+        position: 'relative', zIndex: 10,
+        padding: '96px clamp(20px, 6vw, 64px) 40px',
+        maxWidth: 620,
+      }}>
 
         {/* Available badge */}
         <motion.div
@@ -95,11 +102,11 @@ function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.8 }}
-          style={{ display: 'flex', gap: 14, alignItems: 'center' }}
+          style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}
         >
           <button
             onClick={() => {
-              const el = document.getElementById('work')
+              const el = document.getElementById('experience')
               if (el) {
                 const top = el.getBoundingClientRect().top + window.scrollY - 80
                 window.scrollTo({ top, behavior: 'smooth' })
@@ -153,11 +160,11 @@ function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1 }}
-          style={{ marginTop: 56, display: 'flex', gap: 40 }}
+          style={{ marginTop: 56, display: 'flex', gap: 32, flexWrap: 'wrap' }}
         >
           {[
             ['3', 'Projects'],
-            ['1', 'Internship'],
+            ['2', 'Internships'],
             ['3.83', 'GPA'],
           ].map(([num, label]) => (
             <div key={label} style={{

@@ -4,9 +4,17 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   background: #07080f;
   color: #fff;
   font-family: 'DM Sans', sans-serif;
-  overflow-x: hidden;
+}
+
+img, canvas, iframe, svg {
+  max-width: 100%;
 }

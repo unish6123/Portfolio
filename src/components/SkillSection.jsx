@@ -4,6 +4,7 @@ import { OrbitControls } from '@react-three/drei'
 import { motion, AnimatePresence } from 'framer-motion'
 import SkillTree3D, { ORBIT_CONFIG } from '../three/SkillTree3D'
 import { skillTree } from '../data/skillTree'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const SKILL_COLORS = [
   ['#ff2d78', '#ff6b9d', '#ff4757', '#ff8e53'],
@@ -15,6 +16,7 @@ const SKILL_COUNTS = [5, 4, 4, 4]
 
 export default function SkillSection() {
   const [activeCategory, setActiveCategory] = useState(skillTree.categories[0])
+  const isMobile = useIsMobile(860)
 
   const handleSelect = (cat) => {
     setActiveCategory(prev => prev?.name === cat.name ? null : cat)
@@ -31,7 +33,7 @@ export default function SkillSection() {
     }}>
 
       {/* Header */}
-      <div style={{ padding: '0 64px', marginBottom: 40 }}>
+      <div style={{ padding: '0 clamp(20px, 6vw, 64px)', marginBottom: 40 }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -45,20 +47,25 @@ export default function SkillSection() {
           }}>Tech Stack</div>
           <h2 style={{
             fontFamily: 'Syne, sans-serif', fontWeight: 800,
-            fontSize: 40, letterSpacing: '-0.02em',
+            fontSize: 'clamp(28px, 6vw, 40px)', letterSpacing: '-0.02em',
             color: '#fff', marginBottom: 0
           }}>Skills &amp; tools</h2>
         </motion.div>
       </div>
 
       {/* Main layout */}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'stretch' : 'center',
+      }}>
 
         {/* LEFT PANEL */}
         <div style={{
-          width: 280,
+          width: isMobile ? '100%' : 280,
           flexShrink: 0,
-          padding: '0 0 0 64px',
+          padding: isMobile ? '0 clamp(20px, 6vw, 64px)' : '0 0 0 64px',
+          marginBottom: isMobile ? 24 : 0,
           display: 'flex',
           flexDirection: 'column',
           gap: 10,
@@ -220,9 +227,9 @@ export default function SkillSection() {
         </div>
 
         {/* 3D Canvas */}
-        <div style={{ flex: 1, height: 680 }}>
+        <div style={{ flex: 1, height: isMobile ? 420 : 680, minWidth: 0 }}>
           <Canvas
-            camera={{ position: [0, 9, 3], fov: 52 }}
+            camera={{ position: isMobile ? [0, 12, 4] : [0, 9, 3], fov: isMobile ? 62 : 52 }}
             style={{ background: 'transparent' }}
             onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
           >

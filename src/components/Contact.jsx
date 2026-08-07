@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import emailjs from '@emailjs/browser'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function ParticleCanvas() {
   const canvasRef = useRef()
@@ -114,6 +115,7 @@ export default function Contact() {
   })
   const [status, setStatus] = useState('idle')
   const [focused, setFocused] = useState(null)
+  const isMobile = useIsMobile(480)
 
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -146,7 +148,7 @@ export default function Contact() {
   return (
     <section id="contact" style={{
       position: 'relative',
-      padding: '120px 0 100px',
+      padding: 'clamp(70px, 12vw, 120px) 0 clamp(60px, 10vw, 100px)',
       background: '#07080f',
       width: '100vw',
       marginLeft: 'calc(-50vw + 50%)',
@@ -180,7 +182,10 @@ export default function Contact() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        style={{ textAlign: 'center', marginBottom: 52, position: 'relative', zIndex: 1 }}
+        style={{
+          textAlign: 'center', marginBottom: 52, position: 'relative', zIndex: 1,
+          padding: '0 20px',
+        }}
       >
         <div style={{
           fontSize: 10, letterSpacing: '0.2em',
@@ -192,7 +197,7 @@ export default function Contact() {
         </div>
         <h2 style={{
           fontFamily: 'Syne, sans-serif', fontWeight: 800,
-          fontSize: 44, letterSpacing: '-0.02em',
+          fontSize: 'clamp(28px, 7vw, 44px)', letterSpacing: '-0.02em',
           color: '#fff', margin: '0 0 12px',
           lineHeight: 1.1,
         }}>
@@ -223,7 +228,7 @@ export default function Contact() {
         style={{
           position: 'relative', zIndex: 1,
           width: '100%', maxWidth: 620,
-          padding: '0 24px',
+          padding: '0 clamp(16px, 5vw, 24px)',
         }}
       >
         {/* Card */}
@@ -231,7 +236,7 @@ export default function Contact() {
           background: 'rgba(12,14,28,0.8)',
           border: '1px solid rgba(255,255,255,0.07)',
           borderRadius: 20,
-          padding: '40px 44px',
+          padding: 'clamp(24px, 6vw, 40px) clamp(20px, 6vw, 44px)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           position: 'relative',
@@ -296,7 +301,11 @@ export default function Contact() {
                 style={{ display: 'flex', flexDirection: 'column', gap: 18 }}
               >
                 {/* Name row */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+                  gap: 14,
+                }}>
                   <div>
                     <label style={labelStyle}>First name</label>
                     <input
@@ -461,8 +470,8 @@ export default function Contact() {
 
                 {/* Bottom info */}
                 <div style={{
-                  display: 'flex', justifyContent: 'center',
-                  gap: 24, marginTop: 4,
+                  display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
+                  gap: 16, marginTop: 4,
                 }}>
                   {[
                     { label: '📧', value: 'aryalunish09@gmail.com' },

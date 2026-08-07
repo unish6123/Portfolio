@@ -1,7 +1,8 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { projects, experience } from '../data/project'
+import { projects } from '../data/project'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function VideoModal({ project, onClose }) {
   return (
@@ -76,7 +77,9 @@ function VideoModal({ project, onClose }) {
 
 function ProjectCard({ project, index }) {
   const [showVideo, setShowVideo] = useState(false)
+  const isMobile = useIsMobile(700)
   const isHero = true
+  const stackRow = isHero && !isMobile
 
   const handleMouseEnterCard = (e) => { e.currentTarget.style.borderColor = project.color + '55' }
   const handleMouseLeaveCard = (e) => { e.currentTarget.style.borderColor = project.color + '22' }
@@ -105,7 +108,7 @@ function ProjectCard({ project, index }) {
           borderRadius: 20, overflow: 'hidden',
           gridColumn: isHero ? 'span 2' : 'span 1',
           display: 'flex',
-          flexDirection: isHero ? 'row' : 'column',
+          flexDirection: stackRow ? 'row' : 'column',
           position: 'relative',
         }}
         onMouseEnter={handleMouseEnterCard}
@@ -118,8 +121,8 @@ function ProjectCard({ project, index }) {
 
         <div style={{
           background: '#070810',
-          width: isHero ? '50%' : '100%',
-          minHeight: isHero ? 300 : 200,
+          width: stackRow ? '50%' : '100%',
+          minHeight: isHero ? (isMobile ? 220 : 300) : 200,
           display: 'flex', alignItems: 'center',
           justifyContent: 'center',
           position: 'relative', overflow: 'hidden',
@@ -202,7 +205,7 @@ function ProjectCard({ project, index }) {
         </div>
 
         <div style={{
-          padding: isHero ? '32px 36px' : '22px 24px',
+          padding: isHero ? (isMobile ? '24px 24px' : '32px 36px') : '22px 24px',
           display: 'flex', flexDirection: 'column',
           justifyContent: 'space-between', flex: 1,
         }}>
@@ -216,7 +219,7 @@ function ProjectCard({ project, index }) {
             </div>
 
             <div style={{
-              fontSize: isHero ? 28 : 20,
+              fontSize: isHero ? (isMobile ? 22 : 28) : 20,
               fontWeight: 800, color: '#ffffff',
               fontFamily: 'Syne, sans-serif',
               letterSpacing: '-0.01em',
@@ -228,7 +231,7 @@ function ProjectCard({ project, index }) {
             <div style={{
               fontSize: 13, color: '#4a5568',
               lineHeight: 1.75, marginBottom: 20,
-              maxWidth: isHero ? 420 : '100%',
+              maxWidth: stackRow ? 420 : '100%',
             }}>
               {project.description}
             </div>
@@ -295,125 +298,13 @@ function ProjectCard({ project, index }) {
   )
 }
 
-function ExperienceCard() {
-  const exp = experience[0]
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      style={{
-        background: '#0c0e1c',
-        border: `1px solid ${exp.color}22`,
-        borderRadius: 20, overflow: 'hidden',
-        padding: '36px 40px',
-        position: 'relative',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: 40, alignItems: 'center',
-      }}
-    >
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-        background: `linear-gradient(90deg, transparent, ${exp.color}88, transparent)`,
-      }} />
-
-      <div>
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          fontSize: 10, color: exp.color,
-          letterSpacing: '0.14em', textTransform: 'uppercase',
-          fontFamily: 'monospace', marginBottom: 16,
-          border: `1px solid ${exp.color}33`,
-          padding: '4px 12px', borderRadius: 20,
-          background: `${exp.color}11`,
-        }}>
-          <div style={{
-            width: 6, height: 6, borderRadius: '50%',
-            background: exp.color,
-            boxShadow: `0 0 6px ${exp.color}`,
-          }} />
-          Work Experience
-        </div>
-
-        <div style={{
-          fontSize: 26, fontWeight: 800,
-          color: '#ffffff', fontFamily: 'Syne, sans-serif',
-          letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.2,
-        }}>
-          {exp.role}
-        </div>
-
-        <div style={{
-          fontSize: 16, color: exp.color,
-          fontFamily: 'Syne, sans-serif',
-          fontWeight: 600, marginBottom: 4,
-        }}>
-          {exp.company}
-        </div>
-
-        <div style={{
-          fontSize: 11, color: '#3d4a5c',
-          fontFamily: 'monospace', marginBottom: 20,
-          letterSpacing: '0.06em',
-        }}>
-          {exp.duration}
-        </div>
-
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {exp.tech.map(t => (
-            <span key={t} style={{
-              fontSize: 10, padding: '3px 10px',
-              background: `${exp.color}0f`,
-              border: `1px solid ${exp.color}2a`,
-              borderRadius: 20, color: exp.color,
-              fontFamily: 'DM Sans, sans-serif',
-            }}>
-              {t}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <div style={{
-          fontSize: 13, color: '#4a5568',
-          lineHeight: 1.75, marginBottom: 20,
-        }}>
-          {exp.description}
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {exp.bullets.map((bullet, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}
-            >
-              <div style={{
-                width: 5, height: 5, borderRadius: '50%',
-                background: exp.color,
-                boxShadow: `0 0 6px ${exp.color}`,
-                marginTop: 6, flexShrink: 0,
-              }} />
-              <div style={{ fontSize: 13, color: '#6a7a8a', lineHeight: 1.6 }}>
-                {bullet}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
 export default function Projects() {
+  const isMobile = useIsMobile(700)
   return (
-    <section id="projects" style={{ padding: '100px 64px', background: '#07080f' }}>
+    <section id="work" style={{
+      padding: 'clamp(60px, 10vw, 100px) clamp(20px, 6vw, 64px)',
+      background: '#07080f',
+    }}>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -429,17 +320,21 @@ export default function Projects() {
           Selected work
         </div>
         <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          justifyContent: 'space-between',
+          alignItems: isMobile ? 'flex-start' : 'flex-end',
+          gap: 8,
         }}>
           <h2 style={{
             fontFamily: 'Syne, sans-serif', fontWeight: 800,
-            fontSize: 40, letterSpacing: '-0.02em',
+            fontSize: 'clamp(28px, 6vw, 40px)', letterSpacing: '-0.02em',
             color: '#fff', margin: 0,
           }}>
-            Projects &amp; experience
+            Projects
           </h2>
           <div style={{ fontSize: 12, color: '#3d4a5c', fontFamily: 'monospace' }}>
-            {projects.length} projects · {experience.length} role
+            {projects.length} projects
           </div>
         </div>
       </motion.div>
@@ -447,15 +342,12 @@ export default function Projects() {
       <div style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 16, marginBottom: 16,
+        gap: 16,
         }}>
         {projects.map((project, index) => (
           <ProjectCard key={project.id} project={project} index={index} />
         ))}
       </div>
-
-      <ExperienceCard />
-
     </section>
   )
 }

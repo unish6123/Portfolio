@@ -45,6 +45,18 @@ export const projects = [
 
 export const experience = [
   {
+    id: 2,
+    role: 'AI System Engineer',
+    company: 'Humanity AI',
+    duration: '2026',
+    color: '#a78bfa',
+    description: 'Built an internal AI pipeline for automated financial transaction categorization, cutting processing time and manual review workload for the finance team.',
+    bullets: [
+      'I spent six months building a hybrid rule-based and LLM classification system for 10,000+ bank transactions. I designed a fuzzy-matching layer that routed only unseen merchants to the model, cutting LLM calls by 90%+ and batch processing time from 5 minutes to under 30 seconds. I also self-hosted an 8B-parameter LLM on an NVIDIA DGX Spark, configuring the inference stack myself to keep sensitive data on-premises. The defining moment was getting accuracy to a level the team could trust — combining MCC-code rules with direction-aware merchant matching pushed us to 99% on our validation set. I capped it off with a taxonomy validation layer that checks every LLM label against a fixed category set before caching, so a hallucinated category can never slip through.'
+    ],
+    tech: ['Cloudflare', 'NVIDIA DGX', 'COIN model', 'PostgreSQL'],
+  },
+  {
     id: 1,
     role: 'Software Engineering Intern',
     company: 'Wylight Technology',
